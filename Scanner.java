@@ -266,7 +266,33 @@ public class Scanner {
 
         }
 
-
         return tokens;
+    }
+    public class Cadena{
+        private satatic final int E_Inicial = 0;
+        private satatic final int E_Inside = 1;
+        private satatic final int E_Aceptado = 2;
+
+        public boolean reconocer(String input){
+            int E_Actual = E_Inicial;
+
+            for(char c: input.toCharArray()){
+                switch(E_Actual){
+                    case E_Inicial:
+                        if(c == '"')
+                            E_Actual = E_Inside;
+                        else
+                            return false;
+                        break;
+                    case E_Inside:
+                        if(c == '"')
+                            E_Actual = E_Aceptado;
+                        break;
+                    case E_Aceptado:
+                        return false;
+                }
+            }
+            return E_Actual == E_Aceptado;
+        }
     }
 }

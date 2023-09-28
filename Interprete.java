@@ -21,6 +21,12 @@ public class Interprete {
         } else{
             ejecutarPrompt();
         }
+        Cadena automata = new Cadena();
+        String[] testCases = {"\"cadena\"", "\"otra cadena\"", "cadena", "\"cadenas no cerradas"};
+        for (String testCase : testCases) {
+            boolean resultado = automata.reconocer(testCase);
+            System.out.println("La cadena " + testCase + " es válida: " + result);
+        }
     }
 
     private static void ejecutarArchivo(String path) throws IOException {
