@@ -269,7 +269,7 @@ public class Scanner {
 
         return tokens;
     }
-    public class Cadena{
+    public static class Cadena{
         private static final int E_Inicial = 0;
         private static final int E_Inside = 1;
         private static final int E_Aceptado = 2;
@@ -315,22 +315,15 @@ public class Scanner {
                 estadoComentario=27;
                 return true;
             }
-<<<<<<< Updated upstream
-            else if(c=='/')
-=======
             else if (c=='/')
->>>>>>> Stashed changes
             {
                 estadoComentario=30;
                 return true;
             }
             else
             {
-<<<<<<< Updated upstream
                 estadoComentario=0;//reste
-=======
                 estadoComentario=0;
->>>>>>> Stashed changes
             }
             break;
 
@@ -342,11 +335,7 @@ public class Scanner {
             }
             else
             {
-<<<<<<< Updated upstream
-                //con otro caracter
-=======
                 //Aqui es en cualquier otro caracter
->>>>>>> Stashed changes
                 estadoComentario=27;
                 return true;
             }
@@ -359,28 +348,17 @@ public class Scanner {
             }
             else if (c=='*')
             {
-<<<<<<< Updated upstream
                 return true;//aqui permanecemos en 28
             }
             else
             {
                 estadoComentario=27;
-=======
                 return true;//Se queda en el estado 28
-            }
-            else
-            {
-                estadoComentario = 27;
->>>>>>> Stashed changes
-                return true;
             }
 
             case 29:
-<<<<<<< Updated upstream
             estadoComentario=0;//final del comentario
-=======
             estadoComentario=0;//Final del comentario
->>>>>>> Stashed changes
             return true;
 
             case 30:
@@ -391,19 +369,11 @@ public class Scanner {
             }
             else
             {
-<<<<<<< Updated upstream
                 estadoComentario=30;//Permanecemos hasta el salto de linea
                 return true;
             }
 
-            case 31: 
-=======
-                estadoComentario=30;//ahi se queda hasta el salto de linea
-                return true;
-            }
-
             case 31:
->>>>>>> Stashed changes
             estadoComentario=0;//reset
             return true;
 
