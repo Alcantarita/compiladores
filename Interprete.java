@@ -25,7 +25,7 @@ public class Interprete {
         String[] testCases = {"\"cadena\"", "\"otra cadena\"", "cadena", "\"cadenas no cerradas"};
         for (String testCase : testCases) {
             boolean resultado = automata.reconocer(testCase);
-            System.out.println("La cadena " + testCase + " es válida: " + result);
+            System.out.println("La cadena " + testCase + " es válida: " + resultado);
         }
     }
 

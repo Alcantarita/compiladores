@@ -6,6 +6,7 @@ import java.util.Map;
 public class Scanner {
 
     private static final Map<String, TipoToken> palabrasReservadas;
+    public static int estadoComentario=0;
 
     static {
         palabrasReservadas = new HashMap<>();
@@ -269,9 +270,9 @@ public class Scanner {
         return tokens;
     }
     public class Cadena{
-        private satatic final int E_Inicial = 0;
-        private satatic final int E_Inside = 1;
-        private satatic final int E_Aceptado = 2;
+        private static final int E_Inicial = 0;
+        private static final int E_Inside = 1;
+        private static final int E_Aceptado = 2;
 
         public boolean reconocer(String input){
             int E_Actual = E_Inicial;
@@ -294,5 +295,121 @@ public class Scanner {
             }
             return E_Actual == E_Aceptado;
         }
+    }
+
+    public static boolean esComentario(char c, int i)
+    {
+        switch(estadoComentario)
+        {
+            case 0:
+            if(c=='/')
+            {
+                estadoComentario=26;
+                return true;
+            }
+            break;
+
+            case 26:
+            if(c=='*')
+            {
+                estadoComentario=27;
+                return true;
+            }
+<<<<<<< Updated upstream
+            else if(c=='/')
+=======
+            else if (c=='/')
+>>>>>>> Stashed changes
+            {
+                estadoComentario=30;
+                return true;
+            }
+            else
+            {
+<<<<<<< Updated upstream
+                estadoComentario=0;//reste
+=======
+                estadoComentario=0;
+>>>>>>> Stashed changes
+            }
+            break;
+
+            case 27:
+            if(c=='*')
+            {
+                estadoComentario=28;
+                return true;
+            }
+            else
+            {
+<<<<<<< Updated upstream
+                //con otro caracter
+=======
+                //Aqui es en cualquier otro caracter
+>>>>>>> Stashed changes
+                estadoComentario=27;
+                return true;
+            }
+
+            case 28:
+            if(c=='/')
+            {
+                estadoComentario=29;
+                return true;
+            }
+            else if (c=='*')
+            {
+<<<<<<< Updated upstream
+                return true;//aqui permanecemos en 28
+            }
+            else
+            {
+                estadoComentario=27;
+=======
+                return true;//Se queda en el estado 28
+            }
+            else
+            {
+                estadoComentario = 27;
+>>>>>>> Stashed changes
+                return true;
+            }
+
+            case 29:
+<<<<<<< Updated upstream
+            estadoComentario=0;//final del comentario
+=======
+            estadoComentario=0;//Final del comentario
+>>>>>>> Stashed changes
+            return true;
+
+            case 30:
+            if(c=='\n')
+            {
+                estadoComentario=31;
+                return true;
+            }
+            else
+            {
+<<<<<<< Updated upstream
+                estadoComentario=30;//Permanecemos hasta el salto de linea
+                return true;
+            }
+
+            case 31: 
+=======
+                estadoComentario=30;//ahi se queda hasta el salto de linea
+                return true;
+            }
+
+            case 31:
+>>>>>>> Stashed changes
+            estadoComentario=0;//reset
+            return true;
+
+            default:
+            estadoComentario=0;
+        }
+        return false;
     }
 }
