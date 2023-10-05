@@ -78,8 +78,13 @@ public class Scanner {
                     else if(c == '!'){
                         estado = 10;
                         lexema += c;
+                    } else if (c=='"') {
+                        estado = 24;
+                        lexema += c;
+
                     }
                     break;
+
                 case 1:
                     if(c == '='){
                         lexema += c;
@@ -261,6 +266,24 @@ public class Scanner {
                         i--;
                     }
                     break;
+                case 24:
+                    if(c == '"'){
+                        Token t= new Token(TipoToken.STRING,lexema);
+                        tokens.add(t);
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    else if (c == '\n'){
+                        System.out.println("Cadena incompleta");
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                    }
+                    else{
+                        lexema += c;
+                        estado = 24;
+                    }
             }
 
 
