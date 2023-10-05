@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import Scanner.Cadena;
+//import Scanner.Cadena;
 
 public class Interprete {
 
@@ -23,12 +23,12 @@ public class Interprete {
         } else{
             ejecutarPrompt();
         }
-        Cadena automata = new Cadena();
+        /*Cadena automata = new Cadena();
         String[] testCases = {"\"cadena\"", "\"otra cadena\"", "cadena", "\"cadenas no cerradas"};
         for (String testCase : testCases) {
             boolean resultado = automata.reconocer(testCase);
             System.out.println("La cadena " + testCase + " es válida: " + resultado);
-        }
+        }*/
     }
 
     private static void ejecutarArchivo(String path) throws IOException {

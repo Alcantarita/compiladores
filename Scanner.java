@@ -292,7 +292,7 @@ public class Scanner {
 
         return tokens;
     }
-    public static class Cadena{
+    /*public static class Cadena{
         private static final int E_Inicial = 0;
         private static final int E_Inside = 1;
         private static final int E_Aceptado = 2;
@@ -318,7 +318,7 @@ public class Scanner {
             }
             return E_Actual == E_Aceptado;
         }
-    }
+    }*/
 
     public static boolean esComentario(char c, int i)
     {
