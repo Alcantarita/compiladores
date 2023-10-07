@@ -22,7 +22,6 @@ public class Interprete {
         } else{
             ejecutarPrompt();
         }
-
     }
 
     private static void ejecutarArchivo(String path) throws IOException {
@@ -58,7 +57,6 @@ public class Interprete {
         catch (Exception ex){
             ex.printStackTrace();
         }
-
     }
 
     /*
@@ -76,7 +74,4 @@ public class Interprete {
         );
         existenErrores = true;
     }
-
-
-
 }

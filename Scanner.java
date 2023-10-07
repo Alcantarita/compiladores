@@ -24,7 +24,7 @@ public class Scanner {
         palabrasReservadas.put("var",    TipoToken.VAR);
         palabrasReservadas.put("while",  TipoToken.WHILE);
     }
-
+    public int ln=0;
     private final String source;
 
     private final List<Token> tokens = new ArrayList<>();
@@ -40,7 +40,7 @@ public class Scanner {
 
         for(int i=0; i<source.length(); i++){
             c = source.charAt(i);
-
+            if(c == '\n'){ ln++;}
             switch (estado){
                 case 0:
                     if(Character.isLetter(c)){
@@ -144,6 +144,13 @@ public class Scanner {
                         tokens.add(t);
                         lexema = "";
                     }
+                    else if(Character.isWhitespace(c)){
+                        //  System.out.println("espacio");
+                    }
+                    else{
+                        Interprete.error(ln, "Caracter no reconocido '"+c+"'");
+                        //throw new Exception("Caracter desconocido " + "'"+  c +"' "+ "en la linea " + ln + ".");
+                    }
                     break;
 
                 case 1:
@@ -163,7 +170,7 @@ public class Scanner {
 
                         estado = 0;
                         lexema = "";
-                        //i--;
+                        i--;
                     }
                     break;
                 case 4:
@@ -183,7 +190,7 @@ public class Scanner {
 
                         estado = 0;
                         lexema = "";
-                        //i--;
+                        i--;
                     }
                     break;
                 case 7:
@@ -203,7 +210,7 @@ public class Scanner {
 
                         estado = 0;
                         lexema = "";
-                        //i--;
+                        i--;
                     }
                     break;
                 case 10:
@@ -223,7 +230,7 @@ public class Scanner {
 
                         estado = 0;
                         lexema = "";
-                        //i--;
+                        i--;
                     }
                     break;
                 case 13:
@@ -252,7 +259,6 @@ public class Scanner {
 
                 case 15:
                     if(Character.isDigit(c)){
-                        estado = 15;
                         lexema += c;
                     }
                     else if(c == '.'){
@@ -280,7 +286,7 @@ public class Scanner {
                     break;
                 case 17:
                     if(Character.isDigit(c)){
-                        estado = 17;
+
                         lexema += c;
                     }
                     else if(c == 'E'){
@@ -289,7 +295,7 @@ public class Scanner {
 
                     }
                     else{
-                        Token t = new Token(TipoToken.NUMBER, lexema, Float.valueOf(lexema));
+                        Token t = new Token(TipoToken.NUMBER, lexema, Double.valueOf(lexema));
                         tokens.add(t);
 
                         estado = 0;
@@ -298,7 +304,7 @@ public class Scanner {
                     }
                     break;
                 case 18:
-                    if(c == '+'||c=='-'){
+                    if(c == '+' || c == '-'){
                         estado = 19;
                         lexema += c;
                     }
@@ -306,20 +312,31 @@ public class Scanner {
                         estado = 20;
                         lexema += c;
                     }
+                    else{
+                        estado=0;
+                        lexema="";
+                        i--;
+                        Interprete.error(ln, "Numero exponencial icompleto: Debe ser de la forma 1.52E18");
+                    }
                     break;
                 case 19:
                     if(Character.isDigit(c)){
                         estado = 20;
                         lexema += c;
                     }
+                    else{
+                        estado=0;
+                        lexema="";
+                        i--;
+                        Interprete.error(ln, "Numero exponencial icompleto: Debe ser de la forma 1.52E+2");
+                    }
                     break;
                 case 20:
                     if(Character.isDigit(c)){
-                        estado = 20;
                         lexema += c;
                     }
                     else{
-                        Token t = new Token(TipoToken.NUMBER,lexema,Float.valueOf(lexema));
+                        Token t = new Token(TipoToken.NUMBER,lexema, Double.valueOf(lexema));
                         tokens.add(t);
 
                         estado = 0;
@@ -330,20 +347,28 @@ public class Scanner {
                 case 24:
                     if(c == '"'){
                         lexema += c;
-                        Token t= new Token(TipoToken.STRING,lexema);
+                        Token t= new Token(TipoToken.STRING,lexema , lexema.substring(1, lexema.length()-1));
                         tokens.add(t);
                         estado = 0;
                         lexema = "";
                     }
                     else if (c == '\n'){
-                        System.out.println("Cadena incompleta");
                         estado = 0;
                         lexema = "";
                         i--;
+                        Interprete.error(ln, "Cadena con salto de linea lo cual es incorrecto");
+                        //throw new Exception("Cadena con salto de linea en la linea: "+ln);
+
+                    }
+                    else if(i ==source.length() -1){
+                        estado = 0;
+                        lexema = "";
+                        i--;
+                        Interprete.error(ln, "Cadena con salto de linea lo cual es incorrecto");
+                        //throw new Exception("Cadena incompleta (no cerrada) en la linea: "+ln);
                     }
                     else{
                         lexema += c;
-                        estado = 24;
                     }
             }
 
