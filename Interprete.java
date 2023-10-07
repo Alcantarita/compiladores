@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import Scanner.Cadena;
 
 public class Interprete {
 
@@ -23,12 +22,7 @@ public class Interprete {
         } else{
             ejecutarPrompt();
         }
-        Cadena automata = new Cadena();
-        String[] testCases = {"\"cadena\"", "\"otra cadena\"", "cadena", "\"cadenas no cerradas"};
-        for (String testCase : testCases) {
-            boolean resultado = automata.reconocer(testCase);
-            System.out.println("La cadena " + testCase + " es válida: " + resultado);
-        }
+
     }
 
     private static void ejecutarArchivo(String path) throws IOException {
@@ -83,33 +77,6 @@ public class Interprete {
         existenErrores = true;
     }
 
-    private static void testComentarios()
-    {
-        String[] testComentarios=
-        {
-            "/* Este es un comentario */",
-            "/* Comentario no cerrado",
-            "// Comentario de una linea\n",
-            "/** Comentario de varias lineas */",
-            "// Comentario de una linea sin salto de linea al final"
-        };
 
-        for (String comentario:testComentarios)
-        {
-            boolean esValido=estadoComentarioValido(comentario);
-            System.out.println("El comentario "+comentario+" es valido: "+esValido);
-        }
-    }
 
-    private static boolean estadoComentarioValido(String comentario)
-    {
-        for(char c:comentario.toCharArray())
-        {
-            if(!Scanner.esComentario(c, c))
-            {
-                return false;
-            }
-        }
-         return Scanner.estadoComentario==29||Scanner.estadoComentario==31;
-    }
 }
