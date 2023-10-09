@@ -63,6 +63,7 @@ public class Scanner {
                         */
 
                     }
+
                     else if(c == '>'){
                         estado = 1;
                         lexema += c;
@@ -143,6 +144,10 @@ public class Scanner {
                         Token t = new Token(TipoToken.STAR, lexema);
                         tokens.add(t);
                         lexema = "";
+                    }
+                    else if(c=='/')
+                    {
+                        estado = 26;//
                     }
                     else if(Character.isWhitespace(c)){
                         //  System.out.println("espacio");
