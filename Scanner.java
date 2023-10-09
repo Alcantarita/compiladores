@@ -6,7 +6,6 @@ import java.util.Map;
 public class Scanner {
 
     private static final Map<String, TipoToken> palabrasReservadas;
-    public static int estadoComentario=0;
 
     static {
         palabrasReservadas = new HashMap<>();
