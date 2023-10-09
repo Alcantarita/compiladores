@@ -147,7 +147,7 @@ public class Scanner {
                     }
                     else if(c=='/')
                     {
-                        estado = 26;//
+                        estado = 26;
                     }
                     else if(Character.isWhitespace(c)){
                         //  System.out.println("espacio");

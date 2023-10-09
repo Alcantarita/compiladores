@@ -6,9 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-//import Scanner.Cadena;
-
-
 public class Interprete {
 
     static boolean existenErrores = false;
