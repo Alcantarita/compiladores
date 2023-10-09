@@ -6,7 +6,6 @@ import java.util.Map;
 public class Scanner {
 
     private static final Map<String, TipoToken> palabrasReservadas;
-    public static int estadoComentario=0;
 
     static {
         palabrasReservadas = new HashMap<>();
@@ -50,18 +49,6 @@ public class Scanner {
                     else if(Character.isDigit(c)){
                         estado = 15;
                         lexema += c;
-
-                        /*while(Character.isDigit(c)){
-                            lexema += c;
-                            i++;
-                            c = source.charAt(i);
-                        }
-                        Token t = new Token(TipoToken.NUMBER, lexema, Integer.valueOf(lexema));
-                        lexema = "";
-                        estado = 0;
-                        tokens.add(t);
-                        */
-
                     }
 
                     else if(c == '>'){
@@ -145,7 +132,7 @@ public class Scanner {
                         tokens.add(t);
                         lexema = "";
                     }
-                    else if(c=='/')
+                    else if(c == '/')
                     {
                         estado = 26;
                     }
@@ -240,7 +227,6 @@ public class Scanner {
                     break;
                 case 13:
                     if(Character.isLetterOrDigit(c)){
-                        estado = 13;
                         lexema += c;
                     }
                     else{
@@ -375,67 +361,53 @@ public class Scanner {
                     else{
                         lexema += c;
                     }
-
-                    case 26:
-                    {
-                        if(c=='*')
-                        {
-                            estado=27;
-                        }
-                        else if(c=='/')
-                        {
-                            estado=30;
-                        }
-                        else
-                        {
-                            estado=32;
-                        }
+                    break;
+                case 26:
+                    if(c=='*') {
+                        estado=27;
                     }
-
-                    case 27:
-                    {
-                        if(c=='*')
-                        {
-                            estado=28;
-                        }
-                        else
-                        {
-                            estado=27;
-                        }
+                    else if(c=='/') {
+                        estado=30;
                     }
-
-                    case 28:
+                    else
                     {
-                        if(c=='*')
-                        {
-                            estado=28;
-                        }
-                        else if(c=='/')
-                        {
-                            estado=29;
-                        }
-                        else
-                        {
-                            estado=27;
-                        }
+                        i--;
+                        tokens.add(new Token(TipoToken.SLASH,"/"));
+                        estado=0;
+                        lexema="";
                     }
+                    break;
 
-                    case 30:
-                    {
-                        if(c=='\n')
-                        {
-                            estado=31;
-                        }
-                        else
-                        {
-                            estado=30;
-                        }
+                case 27:
+                    if( c== '*') {
+                        estado=28;
                     }
+                    else {
+                        estado=27;
+                    }
+                    break;
 
-                    case 32:
-                    {
-                        Token t = new Token(TipoToken.SLASH, lexema);
-                    }   
+                case 28:
+                    if(c == '*') {
+                        estado=28;
+                    }
+                    else if(c == '/') {
+                        estado=0;
+                    }
+                    else {
+                        estado=27;
+                    }
+                    break;
+                case 30:
+
+                    if(c=='\n') {
+                        estado=0;
+                        lexema="";
+                    }
+                    else {
+                        estado=30;
+                    }
+                    break;
             }
         }
         return tokens;
