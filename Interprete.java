@@ -8,6 +8,7 @@ import java.util.List;
 
 //import Scanner.Cadena;
 
+
 public class Interprete {
 
     static boolean existenErrores = false;
@@ -18,9 +19,13 @@ public class Interprete {
 
             // Convención defininida en el archivo "system.h" de UNIX
             System.exit(64);
-        } else if(args.length == 1){
+        } 
+        else if(args.length == 1)
+        {
             ejecutarArchivo(args[0]);
-        } else{
+        } 
+        else
+        {
             ejecutarPrompt();
         }
         /*Cadena automata = new Cadena();
@@ -64,7 +69,6 @@ public class Interprete {
         catch (Exception ex){
             ex.printStackTrace();
         }
-
     }
 
     /*
@@ -81,35 +85,5 @@ public class Interprete {
                 "[linea " + linea + "] Error " + posicion + ": " + mensaje
         );
         existenErrores = true;
-    }
-
-    private static void testComentarios()
-    {
-        String[] testComentarios=
-        {
-            "/* Este es un comentario */",
-            "/* Comentario no cerrado",
-            "// Comentario de una linea\n",
-            "/** Comentario de varias lineas */",
-            "// Comentario de una linea sin salto de linea al final"
-        };
-
-        for (String comentario:testComentarios)
-        {
-            boolean esValido=estadoComentarioValido(comentario);
-            System.out.println("El comentario "+comentario+" es valido: "+esValido);
-        }
-    }
-
-    private static boolean estadoComentarioValido(String comentario)
-    {
-        for(char c:comentario.toCharArray())
-        {
-            if(!Scanner.esComentario(c, c))
-            {
-                return false;
-            }
-        }
-         return Scanner.estadoComentario==29||Scanner.estadoComentario==31;
     }
 }
