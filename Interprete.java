@@ -58,10 +58,15 @@ public class Interprete {
         try{
             Scanner scanner = new Scanner(source);
             List<Token> tokens = scanner.scan();
-
-            for(Token token : tokens){
-                System.out.println(token);
+            AST parser = new AST(tokens);
+            if (parser.parse()){
+                System.out.println("No hubo errores");
+            }else{
+                System.out.println("Errores en el analisis");
             }
+            /*for(Token token : tokens){
+                System.out.println(token);
+            }*/
         }
         catch (Exception ex){
             ex.printStackTrace();

@@ -410,6 +410,7 @@ public class Scanner {
                     break;
             }
         }
+        tokens.add(new Token(TipoToken.EOF, "",source.length()));
         return tokens;
     }
 }
