@@ -251,6 +251,242 @@ public class AST implements Parser{
         }
         return null;
     }
+
+    private Expression expresion()
+    {
+        return assigment();
+    }
+    private Expression assigment()
+    {
+        Expression expr = logicOr();
+        return assigmentOpc(expr);
+    }
+    private Expression assigmentOpc(Expression expr)
+    {
+        switch (preanalisis.tipo)
+        {
+            case EQUAL:
+                match(TipoToken.EQUAL);
+                Token operador = previous();
+                Expression expr1 = expresion();
+                return new ExprAssign(operador, expr1);
+        }
+        return expr;
+    }
+    private Expression logicOr()
+    {
+        Expression expr1=logicAnd();
+        return logicOr2(expr1);
+    }
+    private Expression logicOr2(Expression expr)
+    {
+        switch(preanalisis.tipo)
+        {
+            case OR:
+                match(TipoToken.OR);
+                Token operador=previous();
+                Expression expr2=logicAnd();
+                ExprLogical expl = new ExprLogical(expr, operador, expr2);
+                return logicOr2(expl);
+        }
+        return expr;
+    }
+    private Expression logicAnd()
+    {
+        Expression expr1 = equality();
+        return logicAnd2(expr1);
+    }
+    private Expression logicAnd2(Expression expr)
+    {
+        switch (preanalisis.tipo)
+        {
+            case AND:
+                match(TipoToken.AND);
+                Token operador = previous();
+                Expression expr2 = equality();
+                ExprLogical expl = new ExprLogical(expr, operador, expr2);
+                return logicAnd2(expl);
+        }
+        return expr;
+    }
+    private Expression equality()
+    {
+        Expression expr1 =comparison();
+        return equality2(expr1);
+
+    }
+    private Expression equality2(Expression expr)
+    {
+        switch (preanalisis.tipo)
+        {
+            case BANG_EQUAL:
+                match(TipoToken.BANG_EQUAL);
+                Token operador = previous();
+                Expression expr2 = comparison();
+                ExprBinary expb = new ExprBinary(expr, operador, expr2);
+                return equality2(expb);
+            case EQUAL_EQUAL:
+                match(TipoToken.EQUAL_EQUAL);
+                operador = previous();
+                expr2 = comparison();
+                expb = new ExprBinary(expr, operador, expr2);
+                return equality2(expb);
+        }
+        return expr;
+    }
+    private Expression comparison()
+    {
+        Expression expr1 =term();
+        return comparison2(expr1);
+    }
+    private Expression comparison2(Expression expr)
+    {
+        switch (preanalisis.tipo)
+        {
+            case GREATER:
+                match(TipoToken.GREATER);
+                Token operador = previous();
+                Expression expr2 = term();
+                ExprBinary expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+            case GREATER_EQUAL:
+                match(TipoToken.GREATER_EQUAL);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+            case LESS:
+                match(TipoToken.LESS);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+            case LESS_EQUAL:
+                match(TipoToken.LESS_EQUAL);
+                operador = previous();
+                expr2 = term();
+                expb = new ExprBinary(expr, operador, expr2);
+                return comparison2(expb);
+        }
+        return expr;
+    }
+    private Expression term()
+    {
+        Expression expr1 =factor();
+        return term2(expr1);
+    }
+    private Expression term2(Expression expr)
+    {
+        switch (preanalisis.tipo)
+        {
+            case MINUS:
+                match(TipoToken.MINUS);
+                Token operador = previous();
+                Expression expr2 = factor();
+                ExprBinary expb = new ExprBinary(expr, operador, expr2);
+                return term2(expb);
+            case PLUS:
+                match(TipoToken.PLUS);
+                operador = previous();
+                expr2 = factor();
+                expb = new ExprBinary(expr, operador, expr2);
+                return term2(expb);
+        }
+        return expr;
+    }
+    private Expression factor()
+    {
+        Expression expr = unary();
+        return factor2(expr);
+    }
+    private Expression factor2(Expression expr)
+    {
+        switch (preanalisis.tipo)
+        {
+            case SLASH:
+                match(TipoToken.SLASH);
+                Token operador = previous();
+                Expression expr2 = unary();
+                ExprBinary expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb);
+            case STAR:
+                match(TipoToken.STAR);
+                operador = previous();
+                expr2 = unary();
+                expb = new ExprBinary(expr, operador, expr2);
+                return factor2(expb);
+        }
+        return expr;
+    }
+    private Expression unary()
+    {
+        switch (preanalisis.tipo)
+        {
+            case BANG:
+                match(TipoToken.BANG);
+                Token operador = previous();
+                Expression expr = unary();
+                return new ExprUnary(operador, expr);
+            case MINUS:
+                match(TipoToken.MINUS);
+                operador = previous();
+                expr = unary();
+                return new ExprUnary(operador, expr);
+            default:
+                return call();
+        }
+    }
+    private Expression call()
+    {
+        Expression expr = primary();
+        return call2(expr);
+    }
+    private Expression call2(Expression expr)
+    {
+        switch (preanalisis.tipo)
+        {
+            case LEFT_PAREN:
+                match(TipoToken.LEFT_PAREN);
+                List<Expression> lstArguments = argumentsOptional();
+                match(TipoToken.RIGHT_PAREN);
+                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
+                return ecf;
+        }
+        return expr;
+    }
+    private Expression primary(){
+        switch (preanalisis.tipo){
+            case TRUE:
+                match(TipoToken.TRUE);
+                return new ExprLiteral(true);
+            case FALSE:
+                match(TipoToken.FALSE);
+                return new ExprLiteral(false);
+            case NULL:
+                match(TipoToken.NULL);
+                return new ExprLiteral(null);
+            case NUMBER:
+                match(TipoToken.NUMBER);
+                Token numero = previous();
+                return new ExprLiteral(numero.literal);
+            case STRING:
+                match(TipoToken.STRING);
+                Token cadena = previous();
+                return new ExprLiteral(cadena.literal);
+            case IDENTIFIER:
+                match(TipoToken.IDENTIFIER);
+                Token id = previous();
+                return new ExprVariable(id);
+            case LEFT_PAREN:
+                match(TipoToken.LEFT_PAREN);
+                Expression expr = expresion();
+                // Tiene que ser cachado aquello que retorna
+                match(TipoToken.RIGHT_PAREN);
+                return new ExprGrouping(expr);
+        }
+        return null;
+    }
+
     private void match(TipoToken tt) {
         if (preanalisis.tipo == tt) {
             i++;
