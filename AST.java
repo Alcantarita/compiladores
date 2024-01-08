@@ -1,6 +1,8 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
+
 public class AST implements Parser{
     private int i = 0;
     private boolean hayErrores = false;
@@ -19,7 +21,7 @@ public class AST implements Parser{
         statements = program();
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             //System.out.println("Entrada correcta");
-            //printTree();
+            printTree();
             return true;
         } else {
             System.out.println("Se encontraron errores");
@@ -141,8 +143,7 @@ public class AST implements Parser{
             case STRING:
             case IDENTIFIER:
             case LEFT_PAREN:
-                Statement stmt = exprStmt();
-                return stmt;
+                return exprStmt();
             case SEMICOLON:
                 match(TipoToken.SEMICOLON);
                 return null;
@@ -263,13 +264,11 @@ public class AST implements Parser{
     }
     private Expression assigmentOpc(Expression expr)
     {
-        switch (preanalisis.tipo)
-        {
-            case EQUAL:
-                match(TipoToken.EQUAL);
-                Token operador = previous();
-                Expression expr1 = expresion();
-                return new ExprAssign(operador, expr1);
+        if (preanalisis.tipo == TipoToken.EQUAL) {
+            match(TipoToken.EQUAL);
+            Token operador = previous();
+            Expression expr1 = expresion();
+            return new ExprAssign(operador, expr1);
         }
         return expr;
     }
@@ -280,14 +279,12 @@ public class AST implements Parser{
     }
     private Expression logicOr2(Expression expr)
     {
-        switch(preanalisis.tipo)
-        {
-            case OR:
-                match(TipoToken.OR);
-                Token operador=previous();
-                Expression expr2=logicAnd();
-                ExprLogical expl = new ExprLogical(expr, operador, expr2);
-                return logicOr2(expl);
+        if(preanalisis.tipo == TipoToken.OR){
+            match(TipoToken.OR);
+            Token operador = previous();
+            Expression expr2 = logicAnd();
+            ExprLogical expl = new ExprLogical(expr, operador, expr2);
+            return logicOr2(expl);
         }
         return expr;
     }
@@ -298,20 +295,18 @@ public class AST implements Parser{
     }
     private Expression logicAnd2(Expression expr)
     {
-        switch (preanalisis.tipo)
-        {
-            case AND:
-                match(TipoToken.AND);
-                Token operador = previous();
-                Expression expr2 = equality();
-                ExprLogical expl = new ExprLogical(expr, operador, expr2);
-                return logicAnd2(expl);
+        if (preanalisis.tipo == TipoToken.AND) {
+            match(TipoToken.AND);
+            Token operador = previous();
+            Expression expr2 = equality();
+            ExprLogical expl = new ExprLogical(expr, operador, expr2);
+            return logicAnd2(expl);
         }
         return expr;
     }
     private Expression equality()
     {
-        Expression expr1 =comparison();
+        Expression expr1 = comparison();
         return equality2(expr1);
 
     }
@@ -443,14 +438,11 @@ public class AST implements Parser{
     }
     private Expression call2(Expression expr)
     {
-        switch (preanalisis.tipo)
-        {
-            case LEFT_PAREN:
-                match(TipoToken.LEFT_PAREN);
-                List<Expression> lstArguments = argumentsOptional();
-                match(TipoToken.RIGHT_PAREN);
-                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
-                return ecf;
+        if(preanalisis.tipo == TipoToken.LEFT_PAREN){
+            match(TipoToken.LEFT_PAREN);
+            List<Expression> lstArguments = argumentsOptional();
+            match(TipoToken.RIGHT_PAREN);
+            return new ExprCallFunction(expr, lstArguments);
         }
         return expr;
     }
@@ -537,9 +529,6 @@ public class AST implements Parser{
             Token nombre = previous();
             parametros.add(nombre);
             parameters2(parametros);
-        }else{
-            hayErrores = true;
-            System.out.println("Error, se esperaba una comma");
         }
         return parametros;
     }
@@ -580,5 +569,12 @@ public class AST implements Parser{
 
     private Token previous() {
         return this.tokens.get(i - 1);
+    }
+    public void printTree() {
+        for (Statement stmt : statements) {
+            System.out.println(stmt.toString());
+            // Imprime un salto de línea adicional después de cada Statement
+            System.out.println();
+        }
     }
 }

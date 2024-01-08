@@ -1,7 +1,7 @@
 // Prueba 5:
-fun sumar(variable1, variable2){
-    return variabl1 + variable2;
+var a = 10;
+var vari;
+for(vari=0; vari<a ;vari= vari+1){
+    print vari;
+    var hola = 2;
 }
-
-/* Esto es un comentario
-multilinea*/if(2*2){}
