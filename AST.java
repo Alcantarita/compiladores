@@ -449,7 +449,7 @@ public class AST implements Parser{
                 match(TipoToken.LEFT_PAREN);
                 List<Expression> lstArguments = argumentsOptional();
                 match(TipoToken.RIGHT_PAREN);
-                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);+
+                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
                 return ecf;
         }
         return expr;
@@ -485,6 +485,87 @@ public class AST implements Parser{
                 return new ExprGrouping(expr);
         }
         return null;
+    }
+
+    private Statement function(){
+        if(preanalisis.tipo == TipoToken.IDENTIFIER) {
+            match(TipoToken.IDENTIFIER);
+            Token nombre = previous();
+            match(TipoToken.LEFT_PAREN);
+            List<Token> parametros = parametersOpc();
+            match(TipoToken.RIGHT_PAREN);
+            Statement cuerpo = block();
+            //TablaDeSimbolos.asignar(nombre.lexema, funcion);
+            return new StmtFunction(nombre,parametros,(StmtBlock) cuerpo);
+        }else{
+            hayErrores = true;
+            System.out.println("Error, se esperaba un identificador");
+            return null;
+        }
+    }
+    private void functions(){
+        if (preanalisis.tipo == TipoToken.FUN) {
+            funDecl();
+            functions();
+        }
+    }
+    private List<Token> parametersOpc(){
+        if (preanalisis.tipo == TipoToken.IDENTIFIER) {
+            List<Token> parametros = new ArrayList<>();
+            parameters(parametros);
+            return parametros;
+        }
+        return null;
+    }
+    private List<Token> parameters(List<Token> parametros){
+        if(preanalisis.tipo == TipoToken.IDENTIFIER){
+            Token paramTok = preanalisis;
+            match(TipoToken.IDENTIFIER);
+            parametros.add(paramTok);
+            parameters2(parametros);
+        }
+        else{
+            hayErrores = true;
+            System.out.println("Error, se esperaba un identificador");
+        }
+        return null;
+    }
+    private List<Token> parameters2(List<Token> parametros){
+        if(preanalisis.tipo == TipoToken.COMMA) {
+            match(TipoToken.COMMA);
+            match(TipoToken.IDENTIFIER);
+            Token nombre = previous();
+            parametros.add(nombre);
+            parameters2(parametros);
+        }else{
+            hayErrores = true;
+            System.out.println("Error, se esperaba una comma");
+        }
+        return parametros;
+    }
+    private List<Expression> argumentsOptional(){
+
+        if(preanalisis.tipo == TipoToken.BANG || preanalisis.tipo == TipoToken.MINUS ||
+                preanalisis.tipo == TipoToken.TRUE || preanalisis.tipo == TipoToken.FALSE ||
+                preanalisis.tipo == TipoToken.NULL || preanalisis.tipo == TipoToken.NUMBER ||
+                preanalisis.tipo == TipoToken.STRING || preanalisis.tipo == TipoToken.IDENTIFIER ||
+                preanalisis.tipo == TipoToken.LEFT_PAREN){
+            List<Expression> arguments = new ArrayList<>();
+            arguments.add(expresion());
+            arguments(arguments);
+            return arguments;
+        }
+        return null;
+    }
+    private List<Expression> arguments(List<Expression> argumentos){
+        if(preanalisis.tipo == TipoToken.COMMA){
+            match(TipoToken.COMMA);
+            argumentos.add(expresion());
+            arguments(argumentos);
+        }
+        if(hayErrores)
+            return null;
+        return argumentos;
     }
 
     private void match(TipoToken tt) {
