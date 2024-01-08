@@ -8,4 +8,9 @@ class ExprVariable extends Expression {
     public String toString() {
         return "ExprVariable {name: " + name.lexema + "}";
     }
+
+    @Override
+    public Object resolver(Tabla tabla) {
+        return null;
+    }
 }

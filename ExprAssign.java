@@ -11,4 +11,9 @@ public class ExprAssign extends Expression{
     {
         return "ExprAssing ("+value.toString()+")";
     }
+
+    @Override
+    public Object resolver(Tabla tabla) {
+        return null;
+    }
 }

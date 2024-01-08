@@ -9,4 +9,9 @@ class ExprLiteral extends Expression {
     {
         return "ExprLiteral {value: " + (value == null ? "null" : value.toString()) + "}";
     }
+
+    @Override
+    public Object resolver(Tabla tabla) {
+        return value;
+    }
 }
