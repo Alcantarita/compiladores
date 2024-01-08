@@ -9,11 +9,13 @@ public class AST implements Parser{
     private Token preanalisis;
     private final List<Token> tokens;
     private List<Statement> statements;
+    private Tabla tablaDeSimbolos;
 
     public AST(List<Token> tokens){
         this.tokens = tokens;
         preanalisis = this.tokens.get(i);
         statements = new  ArrayList<>();
+        this.tablaDeSimbolos = new Tabla();
     }
 
     @Override
@@ -70,6 +72,13 @@ public class AST implements Parser{
             match(TipoToken.VAR);
             match(TipoToken.IDENTIFIER);
             Token nombre = previous();
+            if (tablaDeSimbolos.existeIdentificador(nombre.lexema)) {
+                hayErrores = true;
+                System.out.println("Error: Variable ya declarada: " + nombre.lexema +" "+ i);
+                return null;
+            }else{
+                tablaDeSimbolos.declarar(nombre.lexema, nombre.literal);
+            }
             Expression inicio = varInit();
             match(TipoToken.SEMICOLON);
             return new StmtVar(nombre, inicio);
@@ -113,6 +122,7 @@ public class AST implements Parser{
     private Statement forStmt(){
         match(TipoToken.FOR);
         match(TipoToken.LEFT_PAREN);
+        tablaDeSimbolos.iniciarNuevoAlcance();
         Statement inicio = forStmt1();
         Expression condicion =  forStmt2();
         Expression incremento = forStmt3();
@@ -128,6 +138,7 @@ public class AST implements Parser{
         if(inicio!=null){
             cuerpo= new StmtBlock(Arrays.asList(inicio,cuerpo));
         }
+        tablaDeSimbolos.cerrarAlcanceActual();
         return cuerpo;
     }
     private Statement forStmt1() {
@@ -237,17 +248,21 @@ public class AST implements Parser{
             match(TipoToken.LEFT_PAREN);
             Expression condicion = expresion();
             match(TipoToken.RIGHT_PAREN);
+            tablaDeSimbolos.iniciarNuevoAlcance();
             Statement cuerpo = statement();
+            tablaDeSimbolos.cerrarAlcanceActual();
             return new StmtLoop(condicion, cuerpo);
         }
         return null;
     }
     private Statement block(){
         if(preanalisis.tipo==TipoToken.LEFT_BRACE) {
+            tablaDeSimbolos.iniciarNuevoAlcance();
             List<Statement> sentencias = new ArrayList<>();
             match(TipoToken.LEFT_BRACE);
             declaration(sentencias);
             match(TipoToken.RIGHT_BRACE);
+            tablaDeSimbolos.cerrarAlcanceActual();
             return  new StmtBlock(sentencias);
         }
         return null;
@@ -265,9 +280,17 @@ public class AST implements Parser{
     private Expression assigmentOpc(Expression expr)
     {
         if (preanalisis.tipo == TipoToken.EQUAL) {
+            Token variable = previous();
             match(TipoToken.EQUAL);
             Token operador = previous();
             Expression expr1 = expresion();
+            if (!tablaDeSimbolos.existeIdentificador(variable.lexema)) {
+                hayErrores = true;
+                System.out.println("Error: Variable no declarada: " + operador.lexema + " token previo "+ " "+previous().lexema+ " "+i);
+                return null;
+            }else{
+                tablaDeSimbolos.declarar(variable.lexema,expr1);
+            }
             return new ExprAssign(operador, expr1);
         }
         return expr;
@@ -468,6 +491,13 @@ public class AST implements Parser{
             case IDENTIFIER:
                 match(TipoToken.IDENTIFIER);
                 Token id = previous();
+                if (preanalisis.tipo == TipoToken.LEFT_PAREN&&!tablaDeSimbolos.existeIdentificador(id.lexema)) {
+                    hayErrores = true;
+                    System.out.println("Error: Funcion no declarada: " + id.lexema +" Token: "+i);
+                }else if (!tablaDeSimbolos.existeIdentificador(id.lexema)) {
+                    hayErrores = true;
+                    System.out.println("Error: Variable no declarada: " + id.lexema + " "+i);
+                }
                 return new ExprVariable(id);
             case LEFT_PAREN:
                 match(TipoToken.LEFT_PAREN);
@@ -484,11 +514,22 @@ public class AST implements Parser{
             match(TipoToken.IDENTIFIER);
             Token nombre = previous();
             match(TipoToken.LEFT_PAREN);
+            tablaDeSimbolos.iniciarNuevoAlcance();
             List<Token> parametros = parametersOpc();
+            for (Token param : parametros) {
+                if (tablaDeSimbolos.existeIdentificador(param.lexema)) {
+                    hayErrores = true;
+                    System.out.println("Error: Parámetro duplicado: " + param.lexema);
+                } else {
+                    tablaDeSimbolos.declarar(param.lexema, param.literal); // Añadir cada parámetro a la tabla de símbolos
+                }
+            }
             match(TipoToken.RIGHT_PAREN);
             Statement cuerpo = block();
-            //TablaDeSimbolos.asignar(nombre.lexema, funcion);
-            return new StmtFunction(nombre,parametros,(StmtBlock) cuerpo);
+            tablaDeSimbolos.cerrarAlcanceActual();
+            StmtFunction funcion = new StmtFunction(nombre, parametros, (StmtBlock) cuerpo);
+            tablaDeSimbolos.declarar(nombre.lexema, funcion);
+            return funcion;
         }else{
             hayErrores = true;
             System.out.println("Error, se esperaba un identificador");
