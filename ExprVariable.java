@@ -4,4 +4,8 @@ class ExprVariable extends Expression {
     ExprVariable(Token name) {
         this.name = name;
     }
+    @Override
+    public String toString() {
+        return "ExprVariable {name: " + name.lexema + "}";
+    }
 }

@@ -449,7 +449,7 @@ public class AST implements Parser{
                 match(TipoToken.LEFT_PAREN);
                 List<Expression> lstArguments = argumentsOptional();
                 match(TipoToken.RIGHT_PAREN);
-                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);
+                ExprCallFunction ecf = new ExprCallFunction(expr, lstArguments);+
                 return ecf;
         }
         return expr;

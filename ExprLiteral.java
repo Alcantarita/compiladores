@@ -4,4 +4,9 @@ class ExprLiteral extends Expression {
     ExprLiteral(Object value) {
         this.value = value;
     }
+    @Override
+    public String toString()
+    {
+        return "ExprLiteral {value: " + (value == null ? "null" : value.toString()) + "}";
+    }
 }

@@ -1,4 +1,3 @@
-
 public class ExprAssign extends Expression{
     final Token name;
     final Expression value;
@@ -6,5 +5,10 @@ public class ExprAssign extends Expression{
     ExprAssign(Token name, Expression value) {
         this.name = name;
         this.value = value;
+    }
+    @Override
+    public String toString()
+    {
+        return "ExprAssing ("+value.toString()+")";
     }
 }

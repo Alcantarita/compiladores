@@ -6,4 +6,8 @@ public class ExprUnary extends Expression{
         this.operator = operator;
         this.right = right;
     }
+    @Override
+    public String toString() {
+        return "ExprUnary {operator: " + operator.lexema + ", right: " + right.toString() + "}";
+    }
 }
