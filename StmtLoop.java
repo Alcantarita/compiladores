@@ -6,4 +6,9 @@ public class StmtLoop extends Statement {
         this.condition = condition;
         this.body = body;
     }
+    @Override
+    public String toString() {
+        return "StmtLoop {condition: " + condition.toString() +
+                ", body: " + body.toString() + "}";
+    }
 }

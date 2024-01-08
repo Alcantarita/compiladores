@@ -4,4 +4,8 @@ public class StmtReturn extends Statement {
     StmtReturn(Expression value) {
         this.value = value;
     }
+    @Override
+    public String toString() {
+        return "StmtPrint {expression: " + value.toString() + "}";
+    }
 }

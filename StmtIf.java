@@ -8,4 +8,9 @@ public class StmtIf extends Statement {
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
     }
+    public String toString() {
+        return "StmtIf {condition: " + condition.toString() +
+                ", thenBranch: " + thenBranch.toString() +
+                ", elseBranch: " + (elseBranch != null ? elseBranch.toString() : "null") + "}";
+    }
 }

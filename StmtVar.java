@@ -6,4 +6,9 @@ public class StmtVar extends Statement {
         this.name = name;
         this.initializer = initializer;
     }
+    @Override
+    public String toString() {
+        return "StmtVar {name: " + name.lexema +
+                ", initializer: " + (initializer != null ? initializer.toString() : "null") + "}";
+    }
 }
