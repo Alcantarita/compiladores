@@ -10,4 +10,7 @@ public class StmtClass extends Statement {
         this.superclass = superclass;
         this.methods = methods;
     }
+    @Override
+    void exec(Tabla tabla) {
+    }
 }

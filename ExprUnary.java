@@ -34,5 +34,6 @@ public class ExprUnary extends Expression{
         }
 
         //Lanzas error
+        return result;
     }
 }

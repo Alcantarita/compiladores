@@ -11,4 +11,7 @@ public class StmtVar extends Statement {
         return "StmtVar {name: " + name.lexema +
                 ", initializer: " + (initializer != null ? initializer.toString() : "null") + "}";
     }
+    @Override
+    void exec(Tabla tabla) {
+    }
 }

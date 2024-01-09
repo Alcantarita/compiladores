@@ -4,8 +4,15 @@ public class StmtReturn extends Statement {
     StmtReturn(Expression value) {
         this.value = value;
     }
+
     @Override
     public String toString() {
-        return "StmtPrint {expression: " + value.toString() + "}";
+        return "StmtReturn {expression: " + (value != null ? value.toString() : "null") + "}";
+    }
+
+    @Override
+    void exec(Tabla tabla) {
     }
 }
+
+

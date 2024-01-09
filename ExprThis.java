@@ -4,4 +4,8 @@ public class ExprThis extends Expression{
     ExprThis() {
         // this.keyword = keyword;
     }
+    @Override
+    public Object resolver(Tabla tabla) {
+        return null;
+    }
 }

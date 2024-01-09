@@ -14,4 +14,5 @@ public class StmtPrint extends Statement {
         Object resultado = expression.resolver(tabla);
         System.out.println(resultado);
     }
+
 }

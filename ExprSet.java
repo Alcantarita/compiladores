@@ -8,4 +8,8 @@ public class ExprSet extends Expression{
         this.name = name;
         this.value = value;
     }
+    @Override
+    public Object resolver(Tabla tabla) {
+        return null;
+    }
 }

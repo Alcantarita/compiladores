@@ -11,6 +11,11 @@ class ExprVariable extends Expression {
 
     @Override
     public Object resolver(Tabla tabla) {
-        return null;
+        // Verificar si la variable existe en la tabla de símbolos
+        if (!tabla.existeIdentificador(name.lexema)) {
+            throw new RuntimeException("Variable no declarada: '" + name.lexema + "'.");
+        }
+        // Obtener y retornar el valor de la variable
+        return tabla.obtener(name.lexema);
     }
 }

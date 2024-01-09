@@ -22,4 +22,7 @@ public class StmtFunction extends Statement {
         sb.append("}");
         return sb.toString();
     }
+    @Override
+    void exec(Tabla tabla) {
+    }
 }

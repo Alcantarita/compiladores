@@ -7,4 +7,8 @@ public class StmtExpression extends Statement {
     public String toString() {
         return "StmtExpression(" + expression.toString()+" )";
     }
+    @Override
+    void exec(Tabla tabla) {
+        expression.resolver(tabla);
+    }
 }

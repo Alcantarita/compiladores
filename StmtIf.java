@@ -13,4 +13,17 @@ public class StmtIf extends Statement {
                 ", thenBranch: " + thenBranch.toString() +
                 ", elseBranch: " + (elseBranch != null ? elseBranch.toString() : "null") + "}";
     }
+    @Override
+    void exec(Tabla tabla) {
+        Object condResult = condition.resolver(tabla);
+        if (!(condResult instanceof Boolean)) {
+            throw new RuntimeException("La condición del if no es booleana");
+        }
+
+        if ((Boolean) condResult) {
+            thenBranch.exec(tabla);
+        } else if (elseBranch != null) {
+            elseBranch.exec(tabla);
+        }
+    }
 }

@@ -17,4 +17,12 @@ public class StmtBlock extends Statement {
         sb.append("}");
         return sb.toString();
     }
+    @Override
+    void exec(Tabla tabla) {
+        // Iniciar un nuevo alcance para el bloque
+        //tabla.iniciarNuevoAlcance();
+        for (Statement stmt : statements) {
+            stmt.exec(tabla);
+        }
+    }
 }

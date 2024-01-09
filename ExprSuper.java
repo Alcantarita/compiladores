@@ -10,4 +10,8 @@ public class ExprSuper extends Expression {
     public String toString() {
         return "ExprSuper {method: " + method.lexema + "}";
     }
+    @Override
+    public Object resolver(Tabla tabla) {
+        return null;
+    }
 }

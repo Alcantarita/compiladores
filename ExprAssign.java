@@ -14,6 +14,7 @@ public class ExprAssign extends Expression{
 
     @Override
     public Object resolver(Tabla tabla) {
+        tabla.asignar(name.lexema,value.resolver(tabla));
         return null;
     }
 }

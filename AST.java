@@ -23,7 +23,8 @@ public class AST implements Parser{
         statements = program();
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             //System.out.println("Entrada correcta");
-            printTree();
+            //printTree();
+            executeProgram();
             return true;
         } else {
             System.out.println("Se encontraron errores");
@@ -72,14 +73,20 @@ public class AST implements Parser{
             match(TipoToken.VAR);
             match(TipoToken.IDENTIFIER);
             Token nombre = previous();
+            Expression inicio = varInit();
+            // Evaluar la expresión de inicio, si está presente
+            Object valorInicial = null;
+            if (inicio != null) {
+                valorInicial = inicio.resolver(tablaDeSimbolos);
+            }
             if (tablaDeSimbolos.existeIdentificador(nombre.lexema)) {
                 hayErrores = true;
                 System.out.println("Error: Variable ya declarada: " + nombre.lexema +" "+ i);
                 return null;
             }else{
-                tablaDeSimbolos.declarar(nombre.lexema, nombre.literal);
+                System.out.println(nombre.lexema + ": "+valorInicial);
+                tablaDeSimbolos.declarar(nombre.lexema, valorInicial);
             }
-            Expression inicio = varInit();
             match(TipoToken.SEMICOLON);
             return new StmtVar(nombre, inicio);
         }
@@ -122,11 +129,12 @@ public class AST implements Parser{
     private Statement forStmt(){
         match(TipoToken.FOR);
         match(TipoToken.LEFT_PAREN);
-        tablaDeSimbolos.iniciarNuevoAlcance();
+
         Statement inicio = forStmt1();
         Expression condicion =  forStmt2();
         Expression incremento = forStmt3();
         match(TipoToken.RIGHT_PAREN);
+        tablaDeSimbolos.iniciarNuevoAlcance();
         Statement cuerpo = statement();
         if(incremento!=null){
             cuerpo = new StmtBlock(Arrays.asList(cuerpo, new StmtExpression(incremento)));
@@ -208,8 +216,10 @@ public class AST implements Parser{
         match(TipoToken.LEFT_PAREN);
         Expression condicion = expresion();
         match(TipoToken.RIGHT_PAREN);
+        tablaDeSimbolos.iniciarNuevoAlcance();
         Statement llave = statement();
         Statement elseLlave = elseStmt();
+        tablaDeSimbolos.cerrarAlcanceActual();
         return new StmtIf(condicion,llave,elseLlave);
     }
     private Statement elseStmt(){
@@ -223,6 +233,7 @@ public class AST implements Parser{
         match(TipoToken.PRINT);
         Expression exp = expresion();
         match(TipoToken.SEMICOLON);
+        //exp.resolver(tablaDeSimbolos);
         return new StmtPrint(exp);
     }
     private Statement returnStmt(){
@@ -277,8 +288,7 @@ public class AST implements Parser{
         Expression expr = logicOr();
         return assigmentOpc(expr);
     }
-    private Expression assigmentOpc(Expression expr)
-    {
+    private Expression assigmentOpc(Expression expr) {
         if (preanalisis.tipo == TipoToken.EQUAL) {
             Token variable = previous();
             match(TipoToken.EQUAL);
@@ -288,10 +298,12 @@ public class AST implements Parser{
                 hayErrores = true;
                 System.out.println("Error: Variable no declarada: " + operador.lexema + " token previo "+ " "+previous().lexema+ " "+i);
                 return null;
-            }else{
-                tablaDeSimbolos.declarar(variable.lexema,expr1);
+            } else {
+                Object valor = expr1.resolver(tablaDeSimbolos); // Evaluar el nuevo valor de la variable
+                System.out.println(variable.lexema + ": "+valor);
+                tablaDeSimbolos.declarar(variable.lexema, valor); // Actualizar el valor en la tabla de símbolos
             }
-            return new ExprAssign(operador, expr1);
+            return new ExprAssign(variable, expr1);
         }
         return expr;
     }
@@ -616,6 +628,11 @@ public class AST implements Parser{
             System.out.println(stmt.toString());
             // Imprime un salto de línea adicional después de cada Statement
             System.out.println();
+        }
+    }
+    public void executeProgram() {
+        for (Statement statement : statements) {
+            statement.exec(tablaDeSimbolos);
         }
     }
 }

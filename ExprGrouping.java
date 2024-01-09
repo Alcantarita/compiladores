@@ -9,4 +9,8 @@ public class ExprGrouping extends Expression {
     {
         return "ExprGrouping {expression: " + expression.toString() + "}";
     }
+    @Override
+    public Object resolver(Tabla tabla) {
+        return expression.resolver(tabla);
+    }
 }

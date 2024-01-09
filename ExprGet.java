@@ -6,4 +6,8 @@ public class ExprGet extends Expression{
         this.object = object;
         this.name = name;
     }
+    @Override
+    public Object resolver(Tabla tabla) {
+        return null;
+    }
 }
