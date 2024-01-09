@@ -17,6 +17,7 @@ public class StmtLoop extends Statement {
     void exec(Tabla tabla) {
         //tabla.iniciarNuevoAlcance();
         while (true) {
+            //tabla.iniciarNuevoAlcance();
             Object condResult = condition.resolver(tabla);
             if (!(condResult instanceof Boolean)) {
                 throw new RuntimeException("La condición del bucle no es booleana");
@@ -25,6 +26,7 @@ public class StmtLoop extends Statement {
                 break;
             }
             body.exec(tabla);
+            //tabla.cerrarAlcanceActual();
         }
         //tabla.cerrarAlcanceActual();
     }

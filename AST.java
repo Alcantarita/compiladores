@@ -75,7 +75,7 @@ public class AST implements Parser{
             Token nombre = previous();
             Expression inicio = varInit();
             // Evaluar la expresión de inicio, si está presente
-            /*Object valorInicial = null;
+            Object valorInicial = null;
             if (inicio != null) {
                 valorInicial = inicio.resolver(tablaDeSimbolos);
             }
@@ -86,7 +86,7 @@ public class AST implements Parser{
             }else{
                 System.out.println(nombre.lexema + ": "+valorInicial);
                 tablaDeSimbolos.declarar(nombre.lexema, valorInicial);
-            }*/
+            }
             match(TipoToken.SEMICOLON);
             return new StmtVar(nombre, inicio);
         }
@@ -631,8 +631,10 @@ public class AST implements Parser{
         }
     }
     public void executeProgram() {
+        //tablaDeSimbolos.iniciarNuevoAlcance();
         for (Statement statement : statements) {
             statement.exec(tablaDeSimbolos);
         }
+        //tablaDeSimbolos.cerrarAlcanceActual();
     }
 }

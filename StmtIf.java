@@ -15,7 +15,7 @@ public class StmtIf extends Statement {
     }
     @Override
     void exec(Tabla tabla) {
-        tabla.iniciarNuevoAlcance();
+        //tabla.iniciarNuevoAlcance();
         Object condResult = condition.resolver(tabla);
         if (!(condResult instanceof Boolean)) {
             throw new RuntimeException("La condición del if no es booleana");
@@ -26,6 +26,6 @@ public class StmtIf extends Statement {
         } else if (elseBranch != null) {
             elseBranch.exec(tabla);
         }
-        tabla.cerrarAlcanceActual();
+        //tabla.cerrarAlcanceActual();
     }
 }

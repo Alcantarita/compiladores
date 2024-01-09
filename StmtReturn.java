@@ -12,6 +12,7 @@ public class StmtReturn extends Statement {
 
     @Override
     void exec(Tabla tabla) {
+        value.resolver(tabla);
     }
 }
 
