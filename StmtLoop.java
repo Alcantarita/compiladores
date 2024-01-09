@@ -15,6 +15,7 @@ public class StmtLoop extends Statement {
 
     @Override
     void exec(Tabla tabla) {
+        //tabla.iniciarNuevoAlcance();
         while (true) {
             Object condResult = condition.resolver(tabla);
             if (!(condResult instanceof Boolean)) {
@@ -25,5 +26,6 @@ public class StmtLoop extends Statement {
             }
             body.exec(tabla);
         }
+        //tabla.cerrarAlcanceActual();
     }
 }

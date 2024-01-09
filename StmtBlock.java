@@ -24,5 +24,6 @@ public class StmtBlock extends Statement {
         for (Statement stmt : statements) {
             stmt.exec(tabla);
         }
+        //tabla.cerrarAlcanceActual();
     }
 }

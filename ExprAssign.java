@@ -14,6 +14,9 @@ public class ExprAssign extends Expression{
 
     @Override
     public Object resolver(Tabla tabla) {
+        if (!tabla.existeIdentificador(name.lexema)) {
+            throw new RuntimeException("Variable no declarada: '" + name.lexema + "'.");
+        }
         tabla.asignar(name.lexema,value.resolver(tabla));
         return null;
     }

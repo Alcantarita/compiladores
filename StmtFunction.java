@@ -24,5 +24,7 @@ public class StmtFunction extends Statement {
     }
     @Override
     void exec(Tabla tabla) {
+        //tabla.iniciarNuevoAlcance();
+        //tabla.cerrarAlcanceActual();
     }
 }

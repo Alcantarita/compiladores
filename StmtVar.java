@@ -13,5 +13,14 @@ public class StmtVar extends Statement {
     }
     @Override
     void exec(Tabla tabla) {
+        if (tabla.existeIdentificador(name.lexema)) {
+            throw new RuntimeException("Variable ya declarada: '" + name.lexema + "'.");
+        }else {
+            Object valorInicial = null;
+            if(initializer!=null){
+                valorInicial =  initializer.resolver(tabla);
+            }
+            tabla.declarar(name.lexema, valorInicial);
+        }
     }
 }

@@ -23,7 +23,7 @@ public class AST implements Parser{
         statements = program();
         if (preanalisis.tipo == TipoToken.EOF && !hayErrores) {
             //System.out.println("Entrada correcta");
-            //printTree();
+            printTree();
             executeProgram();
             return true;
         } else {
@@ -75,7 +75,7 @@ public class AST implements Parser{
             Token nombre = previous();
             Expression inicio = varInit();
             // Evaluar la expresión de inicio, si está presente
-            Object valorInicial = null;
+            /*Object valorInicial = null;
             if (inicio != null) {
                 valorInicial = inicio.resolver(tablaDeSimbolos);
             }
@@ -86,7 +86,7 @@ public class AST implements Parser{
             }else{
                 System.out.println(nombre.lexema + ": "+valorInicial);
                 tablaDeSimbolos.declarar(nombre.lexema, valorInicial);
-            }
+            }*/
             match(TipoToken.SEMICOLON);
             return new StmtVar(nombre, inicio);
         }
@@ -294,7 +294,7 @@ public class AST implements Parser{
             match(TipoToken.EQUAL);
             Token operador = previous();
             Expression expr1 = expresion();
-            if (!tablaDeSimbolos.existeIdentificador(variable.lexema)) {
+            /*if (!tablaDeSimbolos.existeIdentificador(variable.lexema)) {
                 hayErrores = true;
                 System.out.println("Error: Variable no declarada: " + operador.lexema + " token previo "+ " "+previous().lexema+ " "+i);
                 return null;
@@ -302,7 +302,7 @@ public class AST implements Parser{
                 Object valor = expr1.resolver(tablaDeSimbolos); // Evaluar el nuevo valor de la variable
                 System.out.println(variable.lexema + ": "+valor);
                 tablaDeSimbolos.declarar(variable.lexema, valor); // Actualizar el valor en la tabla de símbolos
-            }
+            }*/
             return new ExprAssign(variable, expr1);
         }
         return expr;
@@ -506,10 +506,10 @@ public class AST implements Parser{
                 if (preanalisis.tipo == TipoToken.LEFT_PAREN&&!tablaDeSimbolos.existeIdentificador(id.lexema)) {
                     hayErrores = true;
                     System.out.println("Error: Funcion no declarada: " + id.lexema +" Token: "+i);
-                }else if (!tablaDeSimbolos.existeIdentificador(id.lexema)) {
+                }/*else if (!tablaDeSimbolos.existeIdentificador(id.lexema)) {
                     hayErrores = true;
                     System.out.println("Error: Variable no declarada: " + id.lexema + " "+i);
-                }
+                }*/
                 return new ExprVariable(id);
             case LEFT_PAREN:
                 match(TipoToken.LEFT_PAREN);
